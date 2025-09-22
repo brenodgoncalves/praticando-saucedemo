@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
-import { getLoginPage } from '../support/pages/loginPage'
-import { getInventoryPage } from '../support/pages/inventoryPage'
-import { user } from '../support/data/userData'
+import { getLoginPage } from '../support/pages/loginPage';
+import { getInventoryPage } from '../support/pages/inventoryPage';
+import { user } from '../support/fixtures/userData'
 
 test('deve logar com sucesso', async ({ page }) => {
 
@@ -19,7 +19,7 @@ test('não deve logar com senha incorreta', async ({ page }) => {
     const loginPage = getLoginPage(page)
 
     await loginPage.open()
-    await loginPage.submit(user.username, user.password + 'incorreta')
+    await loginPage.submit(user.username, user.password + 'INVALID')
     await expect(loginPage.error()).toContainText("Epic sadface: Username and password do not match any user in this service")
 
 })
@@ -29,7 +29,7 @@ test('não deve logar com usuário não cadastrado', async ({ page }) => {
     const loginPage = getLoginPage(page)
 
     await loginPage.open()
-    await loginPage.submit(user.username + 'naoexiste', user.password)
+    await loginPage.submit(user.username + 'out', user.password)
     await expect(loginPage.error()).toContainText("Epic sadface: Username and password do not match any user in this service")
 
 })
@@ -49,7 +49,7 @@ test('não deve logar com usuário sem senha', async ({ page }) => {
     const loginPage = getLoginPage(page)
 
     await loginPage.open()
-    await loginPage.submit(user.username + 'naoexiste', '')
+    await loginPage.submit(user.username, '')
     await expect(loginPage.error()).toContainText("Epic sadface: Password is required")
 
 })
