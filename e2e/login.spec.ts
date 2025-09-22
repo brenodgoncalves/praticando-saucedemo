@@ -1,61 +1,65 @@
-import { test, expect } from '@playwright/test';
-
-const user = {
-        username: 'standard_user',
-        password: 'secret_sauce'
-    };
+import { test, expect } from '@playwright/test'
+import { getLoginPage } from '../support/pages/loginPage'
+import { getInventoryPage } from '../support/pages/inventoryPage'
+import { user } from '../support/data/userData'
 
 test('deve logar com sucesso', async ({ page }) => {
 
-    await page.goto('https://www.saucedemo.com/');
-    await page
-        .getByPlaceholder('Username')
-        .fill(user.username);
-    await page
-        .getByPlaceholder('Password')
-        .fill(user.password);
-    await page
-        .getByRole('button', { name: 'Login' })
-        .click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
-    await expect(page
-        .getByText('Products'))
-        .toBeVisible();
+    const loginPage = getLoginPage(page)
+    const inventoryPage = getInventoryPage(page)
 
-});
+    await loginPage.open()
+    await loginPage.submit(user.username, user.password)
+    await inventoryPage.products()
+
+})
 
 test('não deve logar com senha incorreta', async ({ page }) => {
 
-    await page.goto('https://www.saucedemo.com/');
-    await page
-        .getByPlaceholder('Username')
-        .fill(user.username);
-    await page
-        .getByPlaceholder('Password')
-        .fill(user.password+'incorreta');
-    await page
-        .getByRole('button', { name: 'Login' })
-        .click();
-    await expect(page
-        .locator('[data-test="error"]'))
-        .toHaveText("Epic sadface: Username and password do not match any user in this service");
+    const loginPage = getLoginPage(page)
 
-});
+    await loginPage.open()
+    await loginPage.submit(user.username, user.password + 'incorreta')
+    await expect(loginPage.error()).toContainText("Epic sadface: Username and password do not match any user in this service")
+
+})
 
 test('não deve logar com usuário não cadastrado', async ({ page }) => {
 
-    await page.goto('https://www.saucedemo.com/');
-    await page
-        .getByPlaceholder('Username')
-        .fill(user.username+'naoexiste');
-    await page
-        .getByPlaceholder('Password')
-        .fill(user.password);
-    await page
-        .getByRole('button', { name: 'Login' })
-        .click();
-    await expect(page
-        .locator('[data-test="error"]'))
-        .toHaveText("Epic sadface: Username and password do not match any user in this service");
+    const loginPage = getLoginPage(page)
 
-});
+    await loginPage.open()
+    await loginPage.submit(user.username + 'naoexiste', user.password)
+    await expect(loginPage.error()).toContainText("Epic sadface: Username and password do not match any user in this service")
+
+})
+
+test('não deve logar com credenciais em branco', async ({ page }) => {
+
+    const loginPage = getLoginPage(page)
+
+    await loginPage.open()
+    await loginPage.submit('', '')
+    await expect(loginPage.error()).toContainText("Epic sadface: Username is required")
+
+})
+
+test('não deve logar com usuário sem senha', async ({ page }) => {
+
+    const loginPage = getLoginPage(page)
+
+    await loginPage.open()
+    await loginPage.submit(user.username + 'naoexiste', '')
+    await expect(loginPage.error()).toContainText("Epic sadface: Password is required")
+
+})
+
+test('não deve logar com usuário em branco', async ({ page }) => {
+
+    const loginPage = getLoginPage(page)
+
+    await loginPage.open()
+    await loginPage.submit('', user.password)
+    await expect(loginPage.error()).toContainText("Epic sadface: Username is required")
+
+}) 
