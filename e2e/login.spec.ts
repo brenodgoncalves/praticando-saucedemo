@@ -1,15 +1,25 @@
-import {test, expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test('deve logar com sucesso', async ({page}) => {
+test('deve logar com sucesso', async ({ page }) => {
 
-    const username = 'standard_user';
-    const password = 'secret_sauce';
+    const user = {
+        username: 'standard_user',
+        password: 'secret_sauce'
+    };
 
     await page.goto('https://www.saucedemo.com/');
-    await page.locator('#user-name').fill(username);
-    await page.locator('#password').fill(password);
-    await page.locator('#login-button').click();
+    await page
+        .getByPlaceholder('Username')
+        .fill(user.username);
+    await page
+        .getByPlaceholder('Password')
+        .fill(user.password);
+    await page
+        .getByRole('button', { name: 'Login' })
+        .click();
     await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
-    await expect(page.locator('.title')).toHaveText('Products');
+    await expect(page
+        .getByText('Products'))
+        .toBeVisible();
 
 });
