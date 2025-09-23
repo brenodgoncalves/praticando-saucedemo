@@ -3,7 +3,7 @@ import { getLoginPage } from '../support/pages/loginPage';
 import { getInventoryPage } from '../support/pages/inventoryPage';
 import { user } from '../support/fixtures/userData'
 
-test('deve logar com sucesso', async ({ page }) => {
+test('should log in successfully', async ({ page }) => {
 
     const loginPage = getLoginPage(page)
     const inventoryPage = getInventoryPage(page)
@@ -14,7 +14,7 @@ test('deve logar com sucesso', async ({ page }) => {
 
 })
 
-test('não deve logar com senha incorreta', async ({ page }) => {
+test('must not log in with an incorrect password', async ({ page }) => {
 
     const loginPage = getLoginPage(page)
 
@@ -24,7 +24,7 @@ test('não deve logar com senha incorreta', async ({ page }) => {
 
 })
 
-test('não deve logar com usuário não cadastrado', async ({ page }) => {
+test('must not log in with a non-existent user', async ({ page }) => {
 
     const loginPage = getLoginPage(page)
 
@@ -34,7 +34,7 @@ test('não deve logar com usuário não cadastrado', async ({ page }) => {
 
 })
 
-test('não deve logar com credenciais em branco', async ({ page }) => {
+test('must not log in with blank credentials', async ({ page }) => {
 
     const loginPage = getLoginPage(page)
 
@@ -44,7 +44,7 @@ test('não deve logar com credenciais em branco', async ({ page }) => {
 
 })
 
-test('não deve logar com usuário sem senha', async ({ page }) => {
+test('must not log in with a user without a password', async ({ page }) => {
 
     const loginPage = getLoginPage(page)
 
@@ -54,7 +54,7 @@ test('não deve logar com usuário sem senha', async ({ page }) => {
 
 })
 
-test('não deve logar com usuário em branco', async ({ page }) => {
+test('must not log in with a blank username', async ({ page }) => {
 
     const loginPage = getLoginPage(page)
 
